@@ -1,0 +1,8 @@
+---
+# defaults file for roles.d/dns
+suffix_fqdn: lvr-corp.com
+subnet_list: "{{ansible_all_ipv4_addresses[1].split('.')}}"
+subnet: "{{subnet_list[0]}}.{{subnet_list[1]}}.{{subnet_list[2]}}"
+subnet_inv: "{{subnet_list[2]}}.{{subnet_list[1]}}.{{subnet_list[0]}}"
+ip_first_numbers: "{{ansible_all_ipv4_addresses[1].split('.')[0]}}"
+ip_last_numbers: "{{ansible_all_ipv4_addresses[1].split('.')[-1]}}"

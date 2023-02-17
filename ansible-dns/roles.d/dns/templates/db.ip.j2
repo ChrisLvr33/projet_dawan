@@ -1,0 +1,15 @@
+;
+; BIND reverse data file for interfaces
+;
+$TTL    604800
+$ORIGIN {{subnet_inv}}.in-addr.arpa.
+@       IN      SOA     {{ansible_hostname}}.{{suffix_fqdn}}. root.{{suffix_fqdn}}. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      {{ansible_hostname}}.{{suffix_fqdn}}.
+{{ip_last_numbers}}      IN      PTR     {{ansible_hostname}}.{{suffix_fqdn}}.
+
