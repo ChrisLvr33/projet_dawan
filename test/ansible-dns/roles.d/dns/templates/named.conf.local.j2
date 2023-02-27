@@ -1,0 +1,16 @@
+//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+zone "{{suffix_fqdn}}" {
+        type master;
+        file "/etc/bind/db.{{suffix_fqdn}}";
+        allow-query { any; };        
+};
+zone "{{subnet_inv}}.in-addr.arpa" {
+        type master;
+        file "/etc/bind/db.{{ip_first_numbers}}";
+};
