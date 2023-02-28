@@ -63,7 +63,7 @@ Le déploiement des VMs se fait avec **Vagrant** et la configuration des service
 
 J'ai d'abord travaillé sur chaque VM séparément.  
 J'ai glané sur internet des rôles ansible qui pouvaient convenir à l'infrastructure que je voulais mettre en place.  
-Après les avoir décortiqués, je les ai façonnés à ma manière pour que le résulat corresponde à ce que j'attendais !
+Après les avoir décortiqués, je les ai façonnés à ma manière pour que le résultat corresponde à ce que j'attendais !
 
 Les deux rôles récupérés pour le dns et le serveur mail ont été modifiés car trop complexes au départ.  
 Ils présentaient trop de posibilités par rapport à mon *petit* projet :)  
