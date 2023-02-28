@@ -15,7 +15,8 @@ Pour cette fin de formation, je propose de déployer une infrastructure mail dan
 - un serveur dns  
 - un serveur mail  
 - et un serveur webmail.
-Le but de ce déploiement est de l'automatiser au maximum pour pouvoir le redéployer rapidement.
+
+Le but de ce déploiement est de l'automatiser avec **Vagrant** et **Ansible** pour pouvoir le redéployer rapidement.
 ***
 ## Etapes
 ### Etapes 1
