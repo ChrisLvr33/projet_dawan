@@ -44,10 +44,7 @@ apt install iptables-persistent
 ```
 2. **Pour PMG : Proxmox Mail Gateway :**
 
-**Proxmox Mail Gateway** est une solution de sécurité de messagerie open source qui vous aide à protéger votre serveur de messagerie  
-contre toutes les menaces de messagerie dès leur apparition. L'architecture flexible combinée à l'interface de gestion Web conviviale  
-permet de contrôler facilement tous les e-mails entrants et sortants et de protéger leurs utilisateurs contre les spams,  
-les virus, le phishing et les chevaux de Troie.
+**Proxmox Mail Gateway** est une solution de sécurité de messagerie open source qui vous aide à protéger votre serveur de messagerie contre toutes les menaces de messagerie dès leur apparition. L'architecture flexible combinée à l'interface de gestion Web conviviale permet de contrôler facilement tous les e-mails entrants et sortants et de protéger leurs utilisateurs contre les spams, les virus, le phishing et les chevaux de Troie.
 
 PMG est une distribution linux dans laquelle tous ses services sont installés et pré-configurés.  
 La VM est donc déployée avec cette iso :  
