@@ -19,7 +19,7 @@ Pour cette fin de formation, je propose de déployer une infrastructure mail dan
 Le but de ce déploiement est de l'automatiser avec **Vagrant** et **Ansible** pour pouvoir le redéployer rapidement.
 ***
 ## Etapes
-### Etapes 1
+### Etape 1
 Le serveur servant de routeur et celui pour proxmox non pas été automatisés.
 
 1. Pour le routeur:
@@ -36,10 +36,17 @@ net.ipv4.ip_forward=1
    - Ensuite, appliquer la modification avec la commande `sysctl -p`.  
    - Ajouter une règle de NAT dans `iptables`:  
 ```
-iptables -t nat -A POSTROUTING -o < nom_int_reseau_mode_pont > -j MASQUERADE
+iptables -t nat -A POSTROUTING -o <nom_int_reseau_mode_pont> -j MASQUERADE
 ```
    - Et installer le paquet iptables-persistent pour rendre persistant cette règle :  
 ```
 apt install iptables-persistent
 ```
-2. Pour PMG : Proxmox Mail Gateway 
+2. Pour PMG : Proxmox Mail Gateway :
+
+PMG est une distribution linux dans laquelle tous ses services sont installés et pré-configurés.  
+La VM est donc déployée avec cette iso :  
+   - proxmox-mailgateway_7.2-1.iso téléchargée sur le site officiel de [Proxmox](https://www.proxmox.com/en/downloads)  
+Après l'installtion, se connecter l'interface web du serveur  pour configurer la solution en fonction de sa propre infrastrucute en suivant la documentation.
+
+### Etape 2
