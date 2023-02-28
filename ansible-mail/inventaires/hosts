@@ -1,0 +1,4 @@
+[postfix]
+192.168.56.20 ansible_user=vagrant ansible_ssh_private_key_file=/home/tof/projet_dawan/.vagrant/machines/mail1/virtualbox/private_key
+
+

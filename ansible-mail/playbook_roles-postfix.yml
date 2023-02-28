@@ -1,0 +1,8 @@
+---
+
+- name: install postfix
+  hosts: postfix
+  become: true
+  roles:
+    - postfix
+
