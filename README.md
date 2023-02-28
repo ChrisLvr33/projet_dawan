@@ -22,7 +22,7 @@ Le but de ce déploiement est de l'automatiser avec **Vagrant** et **Ansible** p
 ### Etape 1
 Le serveur servant de routeur et celui pour proxmox non pas été automatisés.
 
-1. ** Pour le routeur :**
+1. **Pour le routeur :**
 
 C'est une VM avec 2 interfaces réseaux :  
    - une en mode pont pour faire le lien vers la box  
@@ -42,7 +42,7 @@ iptables -t nat -A POSTROUTING -o <nom_int_reseau_mode_pont> -j MASQUERADE
 ```
 apt install iptables-persistent
 ```
-2. ** Pour PMG : Proxmox Mail Gateway :**
+2. **Pour PMG : Proxmox Mail Gateway :**
 
 PMG est une distribution linux dans laquelle tous ses services sont installés et pré-configurés.  
 La VM est donc déployée avec cette iso :  
