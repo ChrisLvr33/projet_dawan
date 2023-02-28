@@ -80,7 +80,7 @@ Le playbook permet :
       - `/etc/bind/db.lvr.org` pour le fichier de zone
       - `/etc/bind/db.192` pour la zone inversée
 
-**Le but est d'optenir ces résultats :**
+**Le but est d'obtenir ces résultats :**
 
 ```
 #### /etc/bind/named.conf.local 
