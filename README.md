@@ -21,6 +21,7 @@ Le but de ce déploiement est de l'automatiser avec **Vagrant** et **Ansible** p
 ## Etapes
 ***
 ### Etape 1
+
 Le serveur servant de routeur et celui pour proxmox non pas été automatisés.
 ***
 1. **Pour le routeur :**
@@ -55,6 +56,7 @@ La VM est donc déployée avec cette iso :
 Après l'installation, se connecter à l'interface web du serveur pour configurer la solution en fonction de sa propre infrastrucute, en suivant la documentation.
 ***
 ### Etape 2
+
 Dans cette étape, les serveurs dns, mail et webmail vont être déployés et automatisés.
 
 Le déploiement des VMs se fait avec **Vagrant** et la configuration des services se fait avec **Ansible**.
@@ -208,3 +210,98 @@ disable_vrfy_command = yes
 ```
 ***
 
+3. **webmail :** webmail.lvr.org / 192.168.56.30
+
+Le serveur de webmail est un rainloop, petit et simple à mettre en place.
+Pour son déploiement, je n'ai pas utilisé de rôle, j'ai seulement mis toutes les tâches dans un simple playbook.
+
+Le playbook contient donc tous les tâches nécessaires au fonctionnement de rainloop :
+```
+---
+- name: Conf webmail
+  hosts: webmail
+  become: true
+
+  tasks:
+    - name: Mise à jour de la liste des paquets
+      apt:
+        update_cache: yes
+
+    - name: Installation des paquets requis
+      apt:
+        name:
+          - apache2
+          - mariadb-server
+          - php7.4
+          - libapache2-mod-php7.4
+          - php7.4-json
+          - php7.4-curl
+          - php7.4-mysql
+          - php7.4-xml
+          - php7.4-zip
+          - php7.4-imap
+          - wget
+          - unzip
+        state: present
+        update_cache: yes
+
+    - name: Création du répertoire de l'application
+      file:
+        path: /var/www/rainloop
+        state: directory
+
+    - name: Téléchargement de RainLoop
+      get_url:
+        url: https://repository.rainloop.net/installer.php
+        dest: /var/www/rainloop/installer.php
+
+    - name: Installation de RainLoop
+      command: php /var/www/rainloop/installer.php
+
+    - name: Attribution des permissions appropriées
+      file:
+        path: /var/www/rainloop
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: '0755'
+        recurse: yes
+
+    - name: Modifier les valeurs dans le fichier de configuration PHP
+      lineinfile:
+        path: /etc/php/7.4/apache2/php.ini
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      with_items:
+        - { regexp: '^max_execution_time\s*=\s*\d+', line: 'max_execution_time = 300' }
+        - { regexp: '^memory_limit\s*=\s*\d+[MG]', line: 'memory_limit = 512M' }
+        - { regexp: '^upload_max_filesize\s*=\s*\d+[MG]', line: 'upload_max_filesize = 100M' }
+        - { regexp: '^;date.timezone\s*=', line: 'date.timezone = Europe/Paris' }
+
+    - name: Copier le fichier de configuration du virtualhost
+      template:
+        src: rainloop.conf.j2
+        dest: /etc/apache2/sites-available/rainloop.conf
+        mode: '0644'
+
+    - name: Désactiver le site par défaut
+      command: sudo a2dissite 000-default.conf
+      ignore_errors: yes
+
+    - name: Activer le site RainLoop
+      command: sudo a2ensite rainloop.conf
+      notify:
+        - Restart Apache
+
+    - name: Activer le module Apache pour le rewrite
+      command: sudo a2enmod rewrite
+      notify:
+        - Restart Apache
+
+  handlers:
+    - name: Restart Apache
+      service:
+        name: apache2
+        state: restarted
+```
+Il ne reste plus qu'à se connecter à son interface web : **webmail.lvr.org/?admin** pour le configurer et le tour est joué !
