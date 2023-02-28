@@ -1,0 +1,86 @@
+---
+- name: Conf webmail
+  hosts: webmail
+  become: true
+
+  tasks:
+    - name: Mise à jour de la liste des paquets
+      apt:
+        update_cache: yes
+
+    - name: Installation des paquets requis
+      apt:
+        name:
+          - apache2
+          - mariadb-server
+          - php7.4
+          - libapache2-mod-php7.4
+          - php7.4-json
+          - php7.4-curl
+          - php7.4-mysql
+          - php7.4-xml
+          - php7.4-zip
+          - php7.4-imap
+          - wget
+          - unzip
+        state: present
+        update_cache: yes
+
+    - name: Création du répertoire de l'application
+      file:
+        path: /var/www/rainloop
+        state: directory
+
+    - name: Téléchargement de RainLoop
+      get_url:
+        url: https://repository.rainloop.net/installer.php
+        dest: /var/www/rainloop/installer.php
+
+    - name: Installation de RainLoop
+      command: php /var/www/rainloop/installer.php
+
+    - name: Attribution des permissions appropriées
+      file:
+        path: /var/www/rainloop
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: '0755'
+        recurse: yes
+
+    - name: Modifier les valeurs dans le fichier de configuration PHP
+      lineinfile:
+        path: /etc/php/7.4/apache2/php.ini
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      with_items:
+        - { regexp: '^max_execution_time\s*=\s*\d+', line: 'max_execution_time = 300' }
+        - { regexp: '^memory_limit\s*=\s*\d+[MG]', line: 'memory_limit = 512M' }
+        - { regexp: '^upload_max_filesize\s*=\s*\d+[MG]', line: 'upload_max_filesize = 100M' }
+        - { regexp: '^;date.timezone\s*=', line: 'date.timezone = Europe/Paris' }
+
+    - name: Copier le fichier de configuration du virtualhost
+      template:
+        src: rainloop.conf.j2
+        dest: /etc/apache2/sites-available/rainloop.conf
+        mode: '0644'
+
+    - name: Désactiver le site par défaut
+      command: sudo a2dissite 000-default.conf
+      ignore_errors: yes
+
+    - name: Activer le site RainLoop
+      command: sudo a2ensite rainloop.conf
+      notify:
+        - Restart Apache
+
+    - name: Activer le module Apache pour le rewrite
+      command: sudo a2enmod rewrite
+      notify:
+        - Restart Apache
+
+  handlers:
+    - name: Restart Apache
+      service:
+        name: apache2
+        state: restarted
