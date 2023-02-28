@@ -19,9 +19,10 @@ Pour cette fin de formation, je propose de déployer une infrastructure mail dan
 Le but de ce déploiement est de l'automatiser avec **Vagrant** et **Ansible** pour pouvoir le redéployer rapidement.
 ***
 ## Etapes
+***
 ### Etape 1
 Le serveur servant de routeur et celui pour proxmox non pas été automatisés.
-
+***
 1. **Pour le routeur :**
 
 C'est une VM avec 2 interfaces réseaux :  
@@ -42,6 +43,7 @@ iptables -t nat -A POSTROUTING -o <nom_int_reseau_mode_pont> -j MASQUERADE
 ```
 apt install iptables-persistent
 ```
+***
 2. **Pour PMG : Proxmox Mail Gateway :** mx1.lvr.org / 192.168.56.100
 
 **Proxmox Mail Gateway** est une solution de sécurité de messagerie open source qui vous aide à protéger votre serveur de messagerie contre toutes les menaces de messagerie dès leur apparition. L'architecture flexible combinée à l'interface de gestion Web conviviale permet de contrôler facilement tous les e-mails entrants et sortants et de protéger leurs utilisateurs contre les spams, les virus, le phishing et les chevaux de Troie.
@@ -67,7 +69,7 @@ J'ai donc supprimé des options, des automatisations variabilisées,... , enfin 
 J'y ai gardé quand même quelques éléments qui ne servent pas là dans ce projet mais qui pourraient être amenés à me servir si j'ai envie de faire quelques tests plus tard tout en partant de cette base...
 
 Je vais développer rapidement ce que font mes *playbooks ansible* pour mettre en place cette infrastructure :
-
+***
 1. **dns :** ns1.lvr.org / 192.168.56.10
 
 Le serveur dns définit ma zone **lvr.org**.
@@ -145,7 +147,7 @@ $ORIGIN 56.168.192.in-addr.arpa.
 100     IN      PTR     mx1.lvr.org.
 30      IN      PTR     webmail.lvr.org.
 ```
-
+***
 2. **mail :** mail1.lvr.org / 192.168.56.20
 
 Le serveur de mail est un postfix, j'y ai ajouter dovecot pour l'imap qui n'était pas prévu au départ dans le rôle.
@@ -204,3 +206,5 @@ smtpd_recipient_restrictions =
 message_size_limit = 10240000
 disable_vrfy_command = yes
 ```
+***
+
