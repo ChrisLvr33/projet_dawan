@@ -22,7 +22,7 @@ Le but de ce déploiement est de l'automatiser avec **Vagrant** et **Ansible** p
 ***
 ### Etape 1
 
-Le serveur servant de routeur et celui pour proxmox non pas été automatisés.
+Le serveur servant de routeur et celui pour proxmox n'ont pas été automatisés.
 ***
 1. **Pour le routeur :**
 
