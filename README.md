@@ -42,7 +42,7 @@ iptables -t nat -A POSTROUTING -o <nom_int_reseau_mode_pont> -j MASQUERADE
 ```
 apt install iptables-persistent
 ```
-2. **Pour PMG : Proxmox Mail Gateway :**
+2. **Pour PMG : Proxmox Mail Gateway :** mx1.lvr.org / 192.168.56.100
 
 **Proxmox Mail Gateway** est une solution de sécurité de messagerie open source qui vous aide à protéger votre serveur de messagerie contre toutes les menaces de messagerie dès leur apparition. L'architecture flexible combinée à l'interface de gestion Web conviviale permet de contrôler facilement tous les e-mails entrants et sortants et de protéger leurs utilisateurs contre les spams, les virus, le phishing et les chevaux de Troie.
 
@@ -68,7 +68,7 @@ J'y ai gardé quand même quelques éléments qui ne servent pas là dans ce pro
 
 Je vais développer rapidement ce que font mes *playbooks ansible* pour mettre en place cette infrastructure :
 
-1. **dns :**
+1. **dns :** ns1.lvr.org / 192.168.56.10
 
 Le serveur dns définit ma zone **lvr.org**.
 
@@ -144,4 +144,63 @@ $ORIGIN 56.168.192.in-addr.arpa.
 20      IN      PTR     mail1.lvr.org.
 100     IN      PTR     mx1.lvr.org.
 30      IN      PTR     webmail.lvr.org.
+```
+
+2. **mail :** mail1.lvr.org / 192.168.56.20
+
+Le serveur de mail est un postfix, j'y ai ajouter dovecot pour l'imap qui n'était pas prévu au départ dans le rôle.
+
+Le playbook permet :
+   - L'installation de postfix, mailutils, libsasl2-2, sasl2-bin, libsasl2-modules, dovecot-imapd
+   - L'activation et la configuration de `resolvectl` pour la conf dns
+   - La création d'une 10zaine d'utilisateurs pour les tests
+   - La configuration du fichier `/etc/dovecot/conf.d/10-mail.conf` pour que `mail_location =` corresponde avec `home_mailbox =` du fichier `/etc/postfix/main.cf`
+   - La configuration des fichiers essentiels dont :
+      - `/etc/postfix/main.cf`
+
+**Le but est d'obtenir ces résultats :**
+
+```
+#### /etc/postfix/main.cf
+home_mailbox = Maildir/
+myorigin = lvr.org
+smtpd_banner = $myhostname ESMTP $mail_name (Ubuntu)
+biff = no
+append_dot_mydomain = no
+readme_directory = no
+smtpd_tls_cert_file = /etc/ssl/certs/ssl-cert-snakeoil.pem
+smtpd_tls_key_file = /etc/ssl/private/ssl-cert-snakeoil.key
+smtpd_use_tls=yes
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+myhostname = mail1.lvr.org
+default_database_type = hash
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+mydestination = mail1, localhost.lvr.org, localhost, lvr.org
+mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
+mailbox_size_limit = 0
+recipient_delimiter = +
+inet_interfaces = all
+inet_protocols = all
+relayhost = mx1.lvr.org
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = private/auth
+smtpd_sasl_authenticated_header = yes
+smtpd_client_restrictions =
+   permit_mynetworks, permit_sasl_authenticated,
+   sleep 1, reject_unauth_pipelining
+smtpd_helo_restrictions = reject_invalid_helo_hostname
+smtpd_sender_restrictions =
+   reject_unlisted_sender, reject_unknown_sender_domain,
+   permit_mynetworks, permit_sasl_authenticated,
+   reject_non_fqdn_sender
+smtpd_recipient_restrictions =
+    reject_unlisted_recipient, reject_unknown_recipient_domain,
+    permit_mynetworks, permit_sasl_authenticated,
+    reject_non_fqdn_recipient,
+    reject_unauth_destination
+message_size_limit = 10240000
+disable_vrfy_command = yes
 ```
