@@ -69,15 +69,19 @@ J'y ai gardé quand même quelques éléments qui ne servent pas là dans ce pro
 Je vais développer rapidement ce que font mes *playbooks ansible* pour mettre en place cette infrastructure :
 
 1. **dns :**
+
 Le serveur dns définit ma zone **lvr.org**.
-Le playbook permet de :
-   - Installation de bind9
-   - Configuration des fichiers essentiels dont :
+
+Le playbook permet :
+   - L'installation de bind9
+   - La configuration des fichiers essentiels dont :
       - `/etc/bind/named.conf.local`
       - `/etc/bind/named.conf.options`
       - `/etc/bind/db.lvr.org` pour le fichier de zone
       - `/etc/bind/db.192` pour la zone inversée
+
 Le but est d'avoir ces résultats :
+
 ```
 ####/etc/bind/named.conf.local 
 zone "lvr.org" {
