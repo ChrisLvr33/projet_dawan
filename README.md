@@ -51,7 +51,7 @@ La VM est donc déployée avec cette iso :
    - proxmox-mailgateway_7.2-1.iso téléchargée sur le site officiel de [Proxmox](https://www.proxmox.com/en/downloads)
 
 Après l'installation, se connecter à l'interface web du serveur pour configurer la solution en fonction de sa propre infrastrucute, en suivant la documentation.
-
+***
 ### Etape 2
 Dans cette étape, les serveurs dns, mail et webmail vont être déployés et automatisés.
 
@@ -80,7 +80,7 @@ Le playbook permet :
       - `/etc/bind/db.lvr.org` pour le fichier de zone
       - `/etc/bind/db.192` pour la zone inversée
 
-Le but est d'optenir ces résultats :
+**Le but est d'optenir ces résultats :**
 
 ```
 #### /etc/bind/named.conf.local 
@@ -102,8 +102,6 @@ zone "56.168.192.in-addr.arpa" {
                 192.168.56.10;
                 8.8.8.8;
                 8.8.4.4;
-                // 212.27.40.240;
-                // 212.27.40.241;
          };
 
         dnssec-validation auto;
