@@ -30,7 +30,7 @@ C'est une VM avec 2 interfaces réseaux :
    - une en mode pont pour faire le lien vers la box  
    - et une en réseau privé qui servira de passerelle pour le réseau privé.
 
-Sur cette VM est installée Ubuntu server 22.04 pour laquelle il y a très peu de configuration :  
+Sur cette VM est installée **Ubuntu server 22.04** pour laquelle il y a très peu de configuration :  
    - Modification du fichier `/etc/sysctl.conf` en y décommentant cette ligne  
 ```
 net.ipv4.ip_forward=1
@@ -77,7 +77,7 @@ Je vais développer rapidement ce que font mes *playbooks ansible* pour mettre e
 Le serveur dns définit ma zone **lvr.org**.
 
 Le playbook permet :
-   - L'installation de bind9
+   - L'installation de **bind9**
    - La configuration des fichiers essentiels dont :
       - `/etc/bind/named.conf.local`
       - `/etc/bind/named.conf.options`
@@ -152,7 +152,7 @@ $ORIGIN 56.168.192.in-addr.arpa.
 ***
 2. **mail :** mail1.lvr.org / 192.168.56.20
 
-Le serveur de mail est un postfix, j'y ai ajouter dovecot pour l'imap qui n'était pas prévu au départ dans le rôle.
+Le serveur de mail est un **postfix**, j'y ai ajouter **dovecot** pour l'**imap** qui n'était pas prévu au départ dans le rôle.
 
 Le playbook permet :
    - L'installation de postfix, mailutils, libsasl2-2, sasl2-bin, libsasl2-modules, dovecot-imapd
@@ -212,7 +212,7 @@ disable_vrfy_command = yes
 
 3. **webmail :** webmail.lvr.org / 192.168.56.30
 
-Le serveur de webmail est un rainloop, petit et simple à mettre en place.
+Le serveur de webmail est un **rainloop**, petit et simple à mettre en place.  
 Pour son déploiement, je n'ai pas utilisé de rôle, j'ai seulement mis toutes les tâches dans un simple playbook.
 
 Le playbook contient donc tous les tâches nécessaires au fonctionnement de rainloop :
@@ -305,3 +305,6 @@ Le playbook contient donc tous les tâches nécessaires au fonctionnement de rai
         state: restarted
 ```
 Il ne reste plus qu'à se connecter à son interface web : **webmail.lvr.org/?admin** pour le configurer et le tour est joué !
+***
+
+### Etape 3
