@@ -215,7 +215,7 @@ disable_vrfy_command = yes
 Le serveur de webmail est un **rainloop**, petit et simple à mettre en place.  
 Pour son déploiement, je n'ai pas utilisé de rôle, j'ai seulement mis toutes les tâches dans un simple playbook.
 
-Le playbook contient donc tous les tâches nécessaires au fonctionnement de rainloop :
+Le playbook contient donc toutes les tâches nécessaires au fonctionnement de rainloop :
 ```
 ---
 - name: Conf webmail
