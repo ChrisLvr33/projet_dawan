@@ -80,10 +80,10 @@ Le playbook permet :
       - `/etc/bind/db.lvr.org` pour le fichier de zone
       - `/etc/bind/db.192` pour la zone inversée
 
-Le but est d'avoir ces résultats :
+Le but est d'optenir ces résultats :
 
 ```
-####/etc/bind/named.conf.local 
+#### /etc/bind/named.conf.local 
 zone "lvr.org" {
         type master;
         file "/etc/bind/db.lvr.org";
@@ -95,7 +95,7 @@ zone "56.168.192.in-addr.arpa" {
 };
 ```
 ```
-####/etc/bind/named.conf.options 
+#### /etc/bind/named.conf.options 
  options {
         directory "/var/cache/bind";
          forwarders {
@@ -114,7 +114,7 @@ zone "56.168.192.in-addr.arpa" {
 };
 ```
 ```
-####/etc/bind/db.lvr.org 
+#### /etc/bind/db.lvr.org 
 $TTL    604800
 @       IN      SOA     ns1.lvr.org. root.lvr.org. (
                               2         ; Serial
@@ -131,7 +131,7 @@ mail1   IN      A       192.168.56.20
 webmail IN      A       192.168.56.30
 ```
 ```
-####/etc/bind/db.192 
+#### /etc/bind/db.192 
 $TTL    604800
 $ORIGIN 56.168.192.in-addr.arpa.
 @       IN      SOA     ns1.lvr.org. root.lvr.org. (
@@ -147,4 +147,3 @@ $ORIGIN 56.168.192.in-addr.arpa.
 100     IN      PTR     mx1.lvr.org.
 30      IN      PTR     webmail.lvr.org.
 ```
-
