@@ -313,7 +313,7 @@ Après avoir modifié, testé, re-testé, re-re-testé, etc.. les playbooks sur 
 
 Du coup, j'ai tout mis dans un fichier **vagrant** pour qu'au final un simple `vagrant up` déploie les serveurs dns, mail et webmail d'un seul coup de baguette magique :)
 
-Voici donc ce fameux **Vagrantfile**
+Voici donc ce fameux **Vagrantfile** :
 ```
 Vagrant.configure("2") do |config|
 
