@@ -53,7 +53,7 @@ PMG est une distribution linux dans laquelle tous ses services sont installés e
 La VM est donc déployée avec cette iso :  
    - proxmox-mailgateway_7.2-1.iso téléchargée sur le site officiel de [Proxmox](https://www.proxmox.com/en/downloads)
 
-Après l'installation, se connecter à l'interface web du serveur pour configurer la solution en fonction de sa propre infrastrucute, en suivant la documentation.
+Après l'installation, se connecter à l'interface web du serveur pour configurer la solution en fonction de sa propre infrastructure, en suivant la documentation.
 ***
 ### Etape 2
 
