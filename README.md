@@ -53,3 +53,94 @@ La VM est donc déployée avec cette iso :
 Après l'installation, se connecter à l'interface web du serveur pour configurer la solution en fonction de sa propre infrastrucute, en suivant la documentation.
 
 ### Etape 2
+Dans cette étape, les serveurs dns, mail et webmail vont être déployés et automatisés.
+
+Le déploiement des VMs se fait avec **Vagrant** et la configuration des services se fait avec **Ansible**.
+
+J'ai d'abord travaillé sur chaque VM séparément.  
+J'ai glané sur internet des rôles ansible qui pouvaient convenir à l'infrastructure que je voulais mettre en place.  
+Après les avoir décortiqués, je les ai façonnés à ma manière pour que le résulat corresponde à ce que j'attendais !
+
+Les deux rôles récupérés pour le dns et le serveur mail ont été modifiés car trop complexes au départ.  
+Ils présentaient trop de posibilités par rapport à mon *petit* projet :)  
+J'ai donc supprimé des options, des automatisations variabilisées,... , enfin tout ce dont je n'avais pas besoin dans l'instant !  
+J'y ai gardé quand même quelques éléments qui ne servent pas là dans ce projet mais qui pourraient être amenés à me servir si j'ai envie de faire quelques tests plus tard tout en partant de cette base...
+
+Je vais développer rapidement ce que font mes *playbooks ansible* pour mettre en place cette infrastructure :
+
+1. **dns :**
+Le serveur dns définit ma zone **lvr.org**.
+Le playbook permet de :
+   - Installation de bind9
+   - Configuration des fichiers essentiels dont :
+      - `/etc/bind/named.conf.local`
+      - `/etc/bind/named.conf.options`
+      - `/etc/bind/db.lvr.org` pour le fichier de zone
+      - `/etc/bind/db.192` pour la zone inversée
+Le but est d'avoir ces résultats :
+```
+####/etc/bind/named.conf.local 
+zone "lvr.org" {
+        type master;
+        file "/etc/bind/db.lvr.org";
+        allow-query { any; };        
+};
+zone "56.168.192.in-addr.arpa" {
+        type master;
+        file "/etc/bind/db.192";
+};
+```
+```
+####/etc/bind/named.conf.options 
+ options {
+        directory "/var/cache/bind";
+         forwarders {
+                192.168.56.10;
+                8.8.8.8;
+                8.8.4.4;
+                // 212.27.40.240;
+                // 212.27.40.241;
+         };
+
+        dnssec-validation auto;
+
+        auth-nxdomain no;    # conform to RFC1035
+        version none;
+        forward only;
+};
+```
+```
+####/etc/bind/db.lvr.org 
+$TTL    604800
+@       IN      SOA     ns1.lvr.org. root.lvr.org. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      ns1.lvr.org.
+@       IN      MX      10      mx1.lvr.org.
+ns1  IN   A  192.168.56.10
+mx1     IN      A       192.168.56.100
+mail1   IN      A       192.168.56.20
+webmail IN      A       192.168.56.30
+```
+```
+####/etc/bind/db.192 
+$TTL    604800
+$ORIGIN 56.168.192.in-addr.arpa.
+@       IN      SOA     ns1.lvr.org. root.lvr.org. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      ns1.lvr.org.
+10      IN      PTR     ns1.lvr.org.
+20      IN      PTR     mail1.lvr.org.
+100     IN      PTR     mx1.lvr.org.
+30      IN      PTR     webmail.lvr.org.
+```
+
